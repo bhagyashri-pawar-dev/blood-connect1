@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Emergency - Blood Connect</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #fff0f0;
+    text-align:center;
+}
+
+h1 {
+    color:#b30000;
+    margin-top:20px;
+}
+
+.container {
+    margin:20px;
+}
+
+select, input {
+    padding:10px;
+    margin:10px;
+    border-radius:6px;
+    border:1px solid #ccc;
+}
+
+button {
+    padding:12px 20px;
+    background:#b30000;
+    color:white;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+    margin:5px;
+    cursor:pointer;
+}
+
+button:hover {
+    background:#800000;
+}
+
+.card {
+    background:white;
+    margin:15px auto;
+    padding:15px;
+    width:300px;
+    border-radius:10px;
+    box-shadow:0 0 8px rgba(0,0,0,0.1);
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>🚨 Emergency Blood Required</h1>
+<p>Find available verified donors instantly</p>
+
+<div class="container">
+
+    <select id="blood">
+        <option value="">Select Blood Group</option>
+        <option>A+</option>
+        <option>B+</option>
+        <option>O+</option>
+        <option>AB+</option>
+        <option>A-</option>
+        <option>B-</option>
+        <option>O-</option>
+        <option>AB-</option>
+    </select>
+
+    <input type="text" id="city" placeholder="Enter City">
+
+    <br>
+    <button onclick="findEmergency()">🚨 Find Donors</button>
+    
+    <br>
+
+    <button onclick="goBack()">⬅ Back</button>
+
+</div>
+
+<div id="results"></div>
+
+<script>
+
+function findEmergency(){
+
+    let blood = document.getElementById("blood").value.toLowerCase();
+    let city = document.getElementById("city").value.toLowerCase();
+
+    // ⚠️ Empty check
+    if(!blood){
+        alert("Please select blood group ❌");
+        return;
+    }
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    // 🔥 STRICT FILTER (Verified + Available)
+    let results = users.filter(user => 
+        user.blood && user.city && user.available && user.status &&
+        user.blood.toLowerCase() === blood &&
+        user.city.toLowerCase().includes(city) &&
+        user.available === "Yes" &&
+        user.status === "Verified"
+    );
+
+    // 🔁 Fallback (ignore city if no result)
+    if(results.length === 0){
+        results = users.filter(user => 
+            user.blood && user.available && user.status &&
+            user.blood.toLowerCase() === blood &&
+            user.available === "Yes" &&
+            user.status === "Verified"
+        );
+    }
+
+    let output = "";
+
+    if(results.length === 0){
+        output = "<h3>🚨 No verified donors available right now</h3>";
+    } else {
+        results.slice(0,5).forEach(user => {
+            output += `
+                <div class="card">
+                    <h3>${user.name}</h3>
+                    <p>🩸 ${user.blood}</p>
+                    <p>📍 ${user.city}</p>
+                    <p>🟢 Available</p>
+                    <p style="color:green;">✔️ Verified Donor</p>
+                    <p><a href="tel:${user.phone}">📞 Call Now</a></p>
+                </div>
+            `;
+        });
+    }
+
+    document.getElementById("results").innerHTML = output;
+}
+
+// 🔙 Back
+function goBack(){
+    window.location.href = "search.html";
+}
+
+</script>
+
+</body>
+</html>

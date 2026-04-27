@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Register - Blood Connect</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #fff5f5;
+}
+
+.container {
+    width: 350px;
+    margin: 50px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h2 {
+    text-align: center;
+    color: #b30000;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: #b30000;
+    color: white;
+    border: none;
+    border-radius: 8px;
+}
+
+button:hover {
+    background: #800000;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>Register as Donor</h2>
+
+    <form onsubmit="registerUser(event)">
+        
+        <input type="text" id="name" placeholder="Full Name" required>
+        <input type="password" id="password" placeholder="Create Password" required>
+
+        <select id="blood" required>
+            <option value="">Select Blood Group</option>
+            <option>A+</option><option>B+</option><option>O+</option><option>AB+</option>
+            <option>A-</option><option>B-</option><option>O-</option><option>AB-</option>
+        </select>
+
+        <input type="text" id="city" placeholder="City" required>
+
+        <!-- 🔥 FIXED -->
+        <input type="text" id="phone" placeholder="Phone Number" required>
+
+        <label>Any Disease?</label>
+        <select id="disease">
+            <option>No</option>
+            <option>Yes</option>
+        </select>
+
+        <label>Last Blood Donation Date</label>
+        <input type="date" id="lastDonation">
+
+        <label>Available for Donation?</label>
+        <select id="available">
+            <option>Yes</option>
+            <option>No</option>
+        </select>
+
+        <button type="submit">Register</button>
+    </form>
+</div>
+
+<script>
+function registerUser(e){
+    e.preventDefault();
+
+    let name = document.getElementById("name").value.trim();
+    let password = document.getElementById("password").value.trim();
+    let blood = document.getElementById("blood").value;
+    let city = document.getElementById("city").value.trim();
+    let phone = document.getElementById("phone").value.trim();
+    let disease = document.getElementById("disease").value;
+    let lastDate = document.getElementById("lastDonation").value;
+    let available = document.getElementById("available").value;
+
+    if(password.length < 4){
+        alert("Password must be at least 4 characters ❌");
+        return;
+    }
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    // duplicate check
+    if(users.find(u => u.phone === phone)){
+        alert("User already exists ❌");
+        return;
+    }
+
+    let user = {
+        name, password, blood, city, phone,
+        disease, lastDonation: lastDate,
+        available,
+        status: "Not Verified"
+    };
+
+    users.push(user);
+    localStorage.setItem("users", JSON.stringify(users));
+
+    alert("Registered Successfully ✅");
+    window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Find Blood</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #fff5f5;
+    text-align:center;
+}
+
+.container {
+    width: 400px;
+    margin: 30px auto;
+}
+
+input, select {
+    width: 90%;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+button {
+    padding: 10px 20px;
+    background: #b30000;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    margin: 5px;
+    cursor:pointer;
+}
+
+button:hover {
+    background: #800000;
+}
+
+.card {
+    background: white;
+    margin: 10px;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 0 5px gray;
+}
+</style>
+
+</head>
+
+<body>
+
+<h2>Find Blood Donors 🩸</h2>
+
+<!-- 🚨 Emergency -->
+<button onclick="goEmergency()">🚨 Emergency</button>
+
+<div class="container">
+
+    <select id="searchBlood">
+        <option value="">Select Blood Group</option>
+        <option>A+</option>
+        <option>B+</option>
+        <option>O+</option>
+        <option>AB+</option>
+        <option>A-</option>
+        <option>B-</option>
+        <option>O-</option>
+        <option>AB-</option>
+    </select>
+
+    <input type="text" id="searchCity" placeholder="Enter City">
+
+    <br>
+    <button onclick="searchDonors()">Search</button>
+
+</div>
+
+<div id="results"></div>
+
+<script>
+
+function goEmergency(){
+    window.location.href = "emergency.html";
+}
+
+function searchDonors(){
+
+    let blood = document.getElementById("searchBlood").value.toLowerCase();
+    let city = document.getElementById("searchCity").value.toLowerCase();
+
+    if(!blood && !city){
+        alert("Please select blood group or enter city ❌");
+        return;
+    }
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    // ✅ SHOW ALL (no verification filter)
+    let results = users.filter(user => 
+        user.blood.toLowerCase().includes(blood) &&
+        user.city.toLowerCase().includes(city)
+    );
+
+    let output = "";
+
+    if(results.length === 0){
+        output = `
+            <p>No donors found ❌</p>
+            <button onclick="goEmergency()">🚨 Try Emergency</button>
+        `;
+    } else {
+        results.forEach(user => {
+            output += `
+                <div class="card">
+                    <h3>${user.name}</h3>
+                    <p>🩸 ${user.blood}</p>
+                    <p>📍 ${user.city}</p>
+                    <p>📞 ${user.phone}</p>
+
+                    ${
+                        user.status === "Verified"
+                        ? '<p style="color:green;">✔️ Verified Donor</p>'
+                        : '<p style="color:red;">❌ Not Verified</p>'
+                    }
+
+                    <p><a href="tel:${user.phone}">📞 Call Now</a></p>
+                </div>
+            `;
+        });
+    }
+
+    document.getElementById("results").innerHTML = output;
+}
+
+</script>
+
+</body>
+</html>

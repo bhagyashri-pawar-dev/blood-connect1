@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard - Blood Connect</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: #fdf6f6;
+    margin:0;
+}
+
+/* Navbar */
+.navbar {
+    background:#b30000;
+    color:white;
+    padding:15px;
+    font-size:20px;
+    text-align:center;
+}
+
+/* Cards */
+.container {
+    display:flex;
+    justify-content:space-around;
+    margin:20px;
+    flex-wrap:wrap;
+}
+
+.card {
+    background:white;
+    padding:20px;
+    margin:10px;
+    border-radius:10px;
+    width:200px;
+    text-align:center;
+    box-shadow:0 0 8px rgba(0,0,0,0.1);
+}
+
+.card h2 {
+    color:#b30000;
+}
+
+/* Buttons */
+.actions {
+    text-align:center;
+    margin:20px;
+}
+
+.btn {
+    padding:10px 20px;
+    margin:10px;
+    background:#b30000;
+    color:white;
+    text-decoration:none;
+    border-radius:8px;
+}
+
+.btn:hover {
+    background:#800000;
+}
+
+/* Donor List */
+.list {
+    margin:20px;
+}
+
+.user {
+    background:white;
+    margin:10px;
+    padding:10px;
+    border-radius:8px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="navbar">
+    🩸 Blood Connect Dashboard
+</div>
+
+<!-- Stats -->
+<div class="container">
+    <div class="card">
+        <h2 id="total">0</h2>
+        <p>Total Donors</p>
+    </div>
+
+    <div class="card">
+        <h2 id="aplus">0</h2>
+        <p>A+ Donors</p>
+    </div>
+
+    <div class="card">
+        <h2 id="oplus">0</h2>
+        <p>O+ Donors</p>
+    </div>
+</div>
+
+<!-- Buttons -->
+<div class="actions">
+    <a href="register.html" class="btn">Add Donor</a>
+    <a href="search.html" class="btn">Find Blood</a>
+</div>
+
+<!-- Donor List -->
+<div class="list" id="donorList"></div>
+
+<script>
+let users = JSON.parse(localStorage.getItem("users")) || [];
+let isAdmin = localStorage.getItem("admin");
+
+// Stats
+document.getElementById("total").innerText = users.length;
+document.getElementById("aplus").innerText = users.filter(u => u.blood === "A+").length;
+document.getElementById("oplus").innerText = users.filter(u => u.blood === "O+").length;
+
+// Load donors
+function loadUsers(){
+    let output = "";
+
+    users.forEach((user, index) => {
+
+        output += `
+        <div class="user">
+            <b>${user.name}</b> - ${user.blood} - ${user.city} <br>
+
+            🟢 Availability: ${user.available} <br>
+
+            Status: ${user.status === "Verified" ? "✔️ Verified" : "❌ Not Verified"} <br>
+
+            ${user.status === "Verified" ? "" : (isAdmin ? 
+            `<button onclick="verifyUser(${index})">✔ Verify</button>` : "")}
+        </div>
+        `;
+    });
+
+    document.getElementById("donorList").innerHTML = output;
+}
+
+// Verify function
+function verifyUser(i){
+    users[i].status = "Verified";
+    localStorage.setItem("users", JSON.stringify(users));
+    alert("User Verified ✅");
+    loadUsers();
+}
+
+loadUsers();
+</script>
+
+</body>
+</html>
