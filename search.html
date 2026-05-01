@@ -2,48 +2,124 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Find Blood</title>
+<title>Find Blood - Blood Connect</title>
 
 <style>
 body {
     font-family: Arial;
     background: #fff5f5;
-    text-align:center;
+    margin:0;
 }
 
+/* 🔴 Navbar */
+.navbar {
+    background:#b30000;
+    color:white;
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo {
+    font-size:20px;
+    font-weight:bold;
+}
+
+.nav-links a {
+    color:white;
+    margin:0 10px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
+/* 🔍 Search Box */
 .container {
     width: 400px;
     margin: 30px auto;
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+    text-align:center;
 }
 
 input, select {
-    width: 90%;
-    padding: 10px;
-    margin: 10px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+    width:90%;
+    padding:10px;
+    margin:10px;
+    border-radius:6px;
+    border:1px solid #ccc;
 }
 
+/* 🔘 Buttons */
 button {
-    padding: 10px 20px;
-    background: #b30000;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    margin: 5px;
+    padding:10px 20px;
+    background:#b30000;
+    color:white;
+    border:none;
+    border-radius:6px;
+    margin:5px;
     cursor:pointer;
 }
 
 button:hover {
-    background: #800000;
+    background:#800000;
 }
 
+.emergency-btn {
+    background:black;
+}
+
+.emergency-btn:hover {
+    background:#333;
+}
+
+.back-btn {
+    background:#444;
+}
+
+.back-btn:hover {
+    background:#222;
+}
+
+/* 📋 Cards */
 .card {
-    background: white;
-    margin: 10px;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 0 5px gray;
+    background:white;
+    margin:15px auto;
+    padding:15px;
+    width:300px;
+    border-radius:10px;
+    box-shadow:0 0 8px rgba(0,0,0,0.1);
+    text-align:left;
+}
+
+.verified {
+    color:green;
+    font-weight:bold;
+}
+
+.not-verified {
+    color:red;
+}
+
+/* 🔻 Footer */
+footer {
+    background:#b30000;
+    color:white;
+    text-align:center;
+    padding:10px;
+    position:fixed;
+    bottom:0;
+    width:100%;
+}
+
+body {
+    margin-bottom:80px;
 }
 </style>
 
@@ -51,38 +127,56 @@ button:hover {
 
 <body>
 
-<h2>Find Blood Donors 🩸</h2>
+<!-- 🔴 HEADER -->
+<div class="navbar">
+    <div class="logo">🩸 Blood Connect</div>
 
-<!-- 🚨 Emergency -->
-<button onclick="goEmergency()">🚨 Emergency</button>
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="register.html">Register</a>
+        <a href="login.html">Login</a>
+        <a href="search.html">Find Blood</a>
+        <a href="emergency.html">Emergency</a>
+        <a href="about.html">About</a>
+    </div>
+</div>
 
+<!-- 🔍 SEARCH BOX -->
 <div class="container">
+    <h2>Find Blood Donors 🩸</h2>
 
     <select id="searchBlood">
         <option value="">Select Blood Group</option>
-        <option>A+</option>
-        <option>B+</option>
-        <option>O+</option>
-        <option>AB+</option>
-        <option>A-</option>
-        <option>B-</option>
-        <option>O-</option>
-        <option>AB-</option>
+        <option>A+</option><option>B+</option><option>O+</option><option>AB+</option>
+        <option>A-</option><option>B-</option><option>O-</option><option>AB-</option>
     </select>
 
     <input type="text" id="searchCity" placeholder="Enter City">
 
     <br>
     <button onclick="searchDonors()">Search</button>
-
+    <button class="emergency-btn" onclick="goEmergency()">🚨 Emergency</button>
+    <button class="back-btn" onclick="goDashboard()">⬅ Dashboard</button>
 </div>
 
+<!-- 📋 RESULTS -->
 <div id="results"></div>
+
+<!-- 🔻 FOOTER -->
+<footer>
+    <p>© 2026 Blood Connect | Save Lives ❤️</p>
+</footer>
 
 <script>
 
+// 🚨 Emergency
 function goEmergency(){
     window.location.href = "emergency.html";
+}
+
+// 🔙 Dashboard
+function goDashboard(){
+    window.location.href = "dashboard.html";
 }
 
 function searchDonors(){
@@ -97,8 +191,10 @@ function searchDonors(){
 
     let users = JSON.parse(localStorage.getItem("users")) || [];
 
-    // ✅ SHOW ALL (no verification filter)
+    // 🔥 Show all donors (verified + not verified)
     let results = users.filter(user => 
+        user.blood &&
+        user.city &&
         user.blood.toLowerCase().includes(blood) &&
         user.city.toLowerCase().includes(city)
     );
@@ -107,10 +203,16 @@ function searchDonors(){
 
     if(results.length === 0){
         output = `
-            <p>No donors found ❌</p>
-            <button onclick="goEmergency()">🚨 Try Emergency</button>
+            <h3 style="text-align:center;">No donors found ❌</h3>
+            <div style="text-align:center;">
+                <button onclick="goEmergency()">🚨 Try Emergency</button>
+            </div>
         `;
     } else {
+
+        // 🔥 Verified first
+        results.sort((a,b) => a.status === "Verified" ? -1 : 1);
+
         results.forEach(user => {
             output += `
                 <div class="card">
@@ -121,8 +223,8 @@ function searchDonors(){
 
                     ${
                         user.status === "Verified"
-                        ? '<p style="color:green;">✔️ Verified Donor</p>'
-                        : '<p style="color:red;">❌ Not Verified</p>'
+                        ? '<p class="verified">✔ Verified Donor</p>'
+                        : '<p class="not-verified">❌ Not Verified</p>'
                     }
 
                     <p><a href="tel:${user.phone}">📞 Call Now</a></p>
