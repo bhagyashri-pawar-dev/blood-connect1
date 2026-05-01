@@ -8,8 +8,36 @@
 body {
     font-family: Arial;
     background: #fff5f5;
+    margin:0;
 }
 
+/* 🔴 Navbar */
+.navbar {
+    background:#b30000;
+    color:white;
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo {
+    font-size:20px;
+    font-weight:bold;
+}
+
+.nav-links a {
+    color:white;
+    margin:0 10px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
+/* 🧾 Form */
 .container {
     width: 350px;
     margin: 50px auto;
@@ -44,11 +72,42 @@ button {
 button:hover {
     background: #800000;
 }
+
+/* 🔻 Footer */
+footer {
+    background:#b30000;
+    color:white;
+    text-align:center;
+    padding:10px;
+    position:fixed;
+    bottom:0;
+    width:100%;
+}
+
+/* Fix overlap */
+body {
+    margin-bottom:60px;
+}
 </style>
 </head>
 
 <body>
 
+<!-- 🔴 HEADER -->
+<div class="navbar">
+    <div class="logo">🩸 Blood Connect</div>
+
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="register.html">Register</a>
+        <a href="login.html">Login</a>
+        <a href="search.html">Find Blood</a>
+        <a href="emergency.html">Emergency</a>
+        <a href="about.html">About</a>
+    </div>
+</div>
+
+<!-- 🧾 FORM -->
 <div class="container">
     <h2>Register as Donor</h2>
 
@@ -65,7 +124,6 @@ button:hover {
 
         <input type="text" id="city" placeholder="City" required>
 
-        <!-- 🔥 FIXED -->
         <input type="text" id="phone" placeholder="Phone Number" required>
 
         <label>Any Disease?</label>
@@ -87,6 +145,11 @@ button:hover {
     </form>
 </div>
 
+<!-- 🔻 FOOTER -->
+<footer>
+    <p>© 2026 Blood Connect | Save Lives ❤️</p>
+</footer>
+
 <script>
 function registerUser(e){
     e.preventDefault();
@@ -107,7 +170,6 @@ function registerUser(e){
 
     let users = JSON.parse(localStorage.getItem("users")) || [];
 
-    // duplicate check
     if(users.find(u => u.phone === phone)){
         alert("User already exists ❌");
         return;
