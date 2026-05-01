@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Contact - Blood Connect</title>
+
+<style>
+body {
+    margin:0;
+    font-family: Arial;
+    background: #fff5f5;
+}
+
+/* Navbar */
+.navbar {
+    background:#b30000;
+    color:white;
+    padding:15px;
+    display:flex;
+    justify-content:space-between;
+}
+
+.nav-links a {
+    color:white;
+    margin:0 10px;
+    text-decoration:none;
+}
+
+/* Form */
+.container {
+    width:350px;
+    margin:60px auto;
+    background:white;
+    padding:25px;
+    border-radius:10px;
+    box-shadow:0 0 10px rgba(0,0,0,0.1);
+}
+
+h2 {
+    text-align:center;
+    color:#b30000;
+}
+
+input, textarea {
+    width:100%;
+    padding:10px;
+    margin:10px 0;
+    border-radius:6px;
+    border:1px solid #ccc;
+}
+
+button {
+    width:100%;
+    padding:12px;
+    background:#b30000;
+    color:white;
+    border:none;
+    border-radius:8px;
+}
+
+button:hover {
+    background:#800000;
+}
+
+/* Footer */
+footer {
+    background:#b30000;
+    color:white;
+    text-align:center;
+    padding:10px;
+    position:fixed;
+    bottom:0;
+    width:100%;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+    <div>🩸 Blood Connect</div>
+
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="search.html">Find</a>
+        <a href="about.html">About</a>
+    </div>
+</div>
+
+<!-- Contact Form -->
+<div class="container">
+    <h2>Contact Us 📞</h2>
+
+    <form onsubmit="sendMessage(event)">
+        <input type="text" id="name" placeholder="Your Name" required>
+        <input type="email" id="email" placeholder="Your Email" required>
+        <textarea id="message" placeholder="Your Message" required></textarea>
+
+        <button type="submit">Send</button>
+    </form>
+</div>
+
+<!-- Footer -->
+<footer>
+    <p>© 2026 Blood Connect</p>
+</footer>
+
+<script>
+
+function sendMessage(e){
+    e.preventDefault();
+
+    // 👉 values gheto
+    let name = document.getElementById("name").value;
+    let email = document.getElementById("email").value;
+    let message = document.getElementById("message").value;
+
+    // 👉 simple alert (main output)
+    alert("Message Sent ✅\nThank you " + name);
+
+    // 👉 OPTIONAL (store karaycha asel tar)
+    let contacts = JSON.parse(localStorage.getItem("contacts")) || [];
+
+    contacts.push({
+        name: name,
+        email: email,
+        message: message
+    });
+
+    localStorage.setItem("contacts", JSON.stringify(contacts));
+
+    // 👉 form clear
+    document.querySelector("form").reset();
+}
+
+</script>
+
+</body>
+</html>
