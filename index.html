@@ -12,16 +12,33 @@ body {
     text-align:center;
 }
 
-/* Navbar */
+/* 🔴 Navbar */
 .navbar {
     background:#b30000;
     color:white;
     padding:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.logo {
     font-size:20px;
     font-weight:bold;
 }
 
-/* Main Section */
+.nav-links a {
+    color:white;
+    margin:0 10px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.nav-links a:hover {
+    text-decoration: underline;
+}
+
+/* 🏠 Hero Section */
 .hero {
     margin-top:80px;
 }
@@ -36,7 +53,7 @@ body {
     color:#555;
 }
 
-/* Buttons */
+/* 🔘 Buttons */
 .btn {
     display:inline-block;
     margin:15px;
@@ -51,16 +68,43 @@ body {
 .btn:hover {
     background:#800000;
 }
+
+/* 🔻 Footer */
+footer {
+    background:#b30000;
+    color:white;
+    text-align:center;
+    padding:10px;
+    position:fixed;
+    bottom:0;
+    width:100%;
+}
+
+/* Footer overlap fix */
+body {
+    margin-bottom:60px;
+}
 </style>
 
 </head>
 
 <body>
 
+<!-- 🔴 HEADER -->
 <div class="navbar">
-    🩸 Blood Connect
+    <div class="logo">🩸 Blood Connect</div>
+
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="register.html">Register</a>
+        <a href="login.html">Login</a>
+        <a href="search.html">Find Blood</a>
+        <a href="emergency.html">Emergency</a>
+        <a href="about.html">About</a>
+    </div>
 </div>
 
+<!-- 🏠 MAIN SECTION -->
 <div class="hero">
     <h1>Save Lives ❤️</h1>
     <p>Find blood donors near you quickly and easily</p>
@@ -68,6 +112,11 @@ body {
     <a href="register.html" class="btn">Become a Donor</a>
     <a href="search.html" class="btn">Find Blood</a>
 </div>
+
+<!-- 🔻 FOOTER -->
+<footer>
+    <p>© 2026 Blood Connect | Save Lives ❤️</p>
+</footer>
 
 </body>
 </html>
